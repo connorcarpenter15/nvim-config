@@ -24,8 +24,7 @@ vim.keymap.set("n", "<leader>fc", [[:Telescope colorscheme<cr>]])
 vim.keymap.set("n", "<leader>cd", [[:cd %:h<cr>]])
 vim.keymap.set("n", "<leader>cu", [[:cd ..<cr>]])
 
--- this is for (leader + s) changes all instances of the word the cursor is
--- ontop of to the next word typed
+-- to replace all of the words that the cursor is on
 vim.keymap.set("n", "<leader>ra", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- c++
@@ -41,3 +40,7 @@ vim.keymap.set("n", "<C-a>", [[gg<S-v>G]])
 -- rmarkdown
 vim.keymap.set("n", "<leader>rb", [[i```{r}<CR>```<esc>O]])
 vim.keymap.set("n", "<leader>rk", [[:w <CR> :RMarkdown <CR> :!open %:r.html <CR>]])
+
+-- undotree
+vim.keymap.set("n", "<leader>ut", [[:UndotreeToggle <CR>]])
+vim.keymap.set("n", "<leader>up", [[:Telescope undo <CR>]])
