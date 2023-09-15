@@ -38,5 +38,6 @@ vim.keymap.set("n", "<leader>tm", [[:term <cr>]])
 -- select full file
 vim.keymap.set("n", "<C-a>", [[gg<S-v>G]])
 
--- rmd command
+-- rmarkdown
 vim.keymap.set("n", "<leader>rb", [[i```{r}<CR>```<esc>O]])
+vim.keymap.set("n", "<leader>rk", [[:w <CR> :RMarkdown <CR> :!open %:r.html <CR>]])
