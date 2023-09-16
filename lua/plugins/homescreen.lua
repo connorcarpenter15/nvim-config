@@ -22,7 +22,7 @@ return {
       dashboard.button("n", " " .. " New File", ":ene <BAR> startinsert <CR>"),
       dashboard.button("r", " " .. " Recent Files", ":Telescope oldfiles <CR>"),
       -- dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
-      dashboard.button("c", " " .. " Edit Config", ":cd ~/.config/nvim <CR> :e init.lua <CR>"),
+      dashboard.button("c", " " .. " Edit Config", ":e $MYVIMRC <CR>"),
       dashboard.button("s", " " .. " Restore Session", [[:lua require("persistence").load() <cr>]]),
       dashboard.button("h", "󰗶 " .. " Check Health", [[:checkhealth <CR>]]),
       dashboard.button("l", "󰒲 " .. " Lazy", ":Lazy<CR>"),

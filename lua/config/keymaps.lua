@@ -44,3 +44,6 @@ vim.keymap.set("n", "<leader>rk", [[:w <CR> :RMarkdown <CR> :!open %:r.html <CR>
 -- undotree
 vim.keymap.set("n", "<leader>ut", [[:UndotreeToggle <CR>]])
 vim.keymap.set("n", "<leader>up", [[:Telescope undo <CR>]])
+
+-- lsp install
+vim.keymap.set("n", "<leader>il", [[:LspInstall <CR>]])
