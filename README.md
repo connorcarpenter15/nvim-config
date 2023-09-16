@@ -1,6 +1,6 @@
 # Introduction
 
-This repository hosts my Neovim configuration for macOS. It is based on the LazyVim starter distribution, and using lazy.nvim for plugin management.
+This repository hosts my Neovim configuration for macOS. It is based on the LazyVim starter distribution, and using [lazy.nvim](https://github.com/folke/lazy.nvim) for plugin management.
 
 # Install and Setup
 
