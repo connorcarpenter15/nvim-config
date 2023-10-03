@@ -1,3 +1,7 @@
+vim.api.nvim_create_user_command("MiniFiles", function()
+  require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
+end, {})
+
 return {
   "goolord/alpha-nvim",
   event = "VimEnter",
@@ -19,7 +23,7 @@ return {
     dashboard.section.header.val = vim.split(logo, "\n")
     dashboard.section.buttons.val = {
       dashboard.button("f", " " .. " Find File", ":Telescope find_files <CR>"),
-      -- dashboard.button("n", " " .. " New File", ":ene <BAR> startinsert <CR>"),
+      dashboard.button("n", " " .. " New File", ":MiniFiles <CR>o"),
       dashboard.button("r", " " .. " Recent Files", ":Telescope oldfiles <CR>"),
       -- dashboard.button("g", " " .. " Find text", ":Telescope live_grep <CR>"),
       dashboard.button("c", " " .. " Edit Config", ":e $MYVIMRC <CR>"),

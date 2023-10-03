@@ -16,6 +16,18 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- allow changing and deleting without overriding current paste registers
+-- in otherwords automatically delete or change to the void register
+vim.api.nvim_set_keymap("n", "d", '"_d', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "d", '"_d', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "D", '"_D', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "D", '"_D', { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap("n", "c", '"_c', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "c", '"_c', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "C", '"_C', { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "C", '"_C', { noremap = true, silent = true })
+
 -- python
 vim.keymap.set("n", "<leader>py", [[:set autochdir <CR> :FloatingTerm <CR> python3 <C-\><C-n>"#pi <CR>]])
 vim.keymap.set("n", "<leader>fp", [[:w <CR> :!black % <CR><CR>]])
@@ -24,7 +36,7 @@ vim.keymap.set("n", "<leader>fp", [[:w <CR> :!black % <CR><CR>]])
 vim.keymap.set(
   "n",
   "<leader>cp",
-  [[:set autochdir <CR> :FloatingTerm <CR> g++ -o <C-\><C-n>"#pi<BS><BS><BS><BS> <C-\><C-n>"#pi && ./<C-\><C-n>"#pi<BS><BS><BS><BS> <CR>]]
+  [[:set autochdir <CR> :FloatingTerm <CR> g++ -std=c++20 -o <C-\><C-n>"#pi<BS><BS><BS><BS> <C-\><C-n>"#pi && ./<C-\><C-n>"#pi<BS><BS><BS><BS> <CR>]]
 )
 
 -- java
@@ -46,9 +58,17 @@ vim.keymap.set("n", "<leader>tm", [[:term <cr>]])
 -- select full file
 vim.keymap.set("n", "<C-a>", [[gg<S-v>G]])
 
+-- markdown preview
+vim.keymap.set("n", "<leader>mp", [[:MarkdownPreview<CR>]], { silent = true, desc = "Markdown Preview" })
+
 -- rmarkdown
 vim.keymap.set("n", "<leader>rb", [[i```{r}<CR>```<esc>O]])
-vim.keymap.set("n", "<leader>rk", [[:w <CR> :RMarkdown <CR> :!open %:r.html <CR>]])
+vim.keymap.set("n", "<leader>rk", [[:w <cr>:RMarkdown <CR>]], { silent = true })
+vim.keymap.set(
+  "n",
+  "<leader>rh",
+  [[i---<CR>title: ""<CR>author: ""<CR>date: "`r Sys.Date()`"<CR>output: html_document<CR>---<CR><CR>```{r setup, include=FALSE}<CR>knitr::opts_chunk$set(echo = TRUE)<CR>```<CR><CR>---<CR><CR>]]
+)
 
 -- undotree
 vim.keymap.set("n", "<leader>ut", [[:UndotreeToggle <CR>]])
@@ -56,3 +76,20 @@ vim.keymap.set("n", "<leader>up", [[:Telescope undo <CR>]])
 
 -- lsp install
 vim.keymap.set("n", "<leader>il", [[:LspInstall <CR>]])
+
+-- goyo (writing mode)
+vim.api.nvim_create_user_command("HideLualine", function()
+  require("lualine").hide({ place = { "statusline" }, unhide = false })
+end, {})
+
+vim.api.nvim_create_user_command("ShowLualine", function()
+  require("lualine").hide({ place = { "statusline" }, unhide = true })
+end, {})
+
+vim.keymap.set(
+  "n",
+  "<leader>ge",
+  "[[:set linebreak<CR>:set wrap<CR>:HideLualine<CR>:Goyo<CR>]]",
+  { silent = true, desc = "Enable Goyo" }
+)
+vim.keymap.set("n", "<leader>gd", "[[:ShowLualine<CR>:Goyo!<CR>]]", { silent = true, desc = "Disable Goyo" })
