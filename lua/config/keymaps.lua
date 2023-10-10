@@ -77,7 +77,7 @@ vim.keymap.set("n", "<leader>up", [[:Telescope undo <CR>]])
 -- lsp install
 vim.keymap.set("n", "<leader>il", [[:LspInstall <CR>]])
 
--- goyo (writing mode)
+-- functions to hide and show lualine
 vim.api.nvim_create_user_command("HideLualine", function()
   require("lualine").hide({ place = { "statusline" }, unhide = false })
 end, {})
@@ -86,10 +86,23 @@ vim.api.nvim_create_user_command("ShowLualine", function()
   require("lualine").hide({ place = { "statusline" }, unhide = true })
 end, {})
 
+-- goyo (writing mode)
 vim.keymap.set(
   "n",
   "<leader>ge",
-  "[[:set linebreak<CR>:set wrap<CR>:HideLualine<CR>:Goyo<CR>]]",
+  "[[:colorscheme catppuccin<CR>:set linebreak<CR>:set wrap<CR>:HideLualine<CR>:Goyo<CR>:Goyo 60%<CR>]]",
   { silent = true, desc = "Enable Goyo" }
 )
-vim.keymap.set("n", "<leader>gd", "[[:ShowLualine<CR>:Goyo!<CR>]]", { silent = true, desc = "Disable Goyo" })
+
+vim.keymap.set(
+  "n",
+  "<leader>gd",
+  "[[:colorscheme tokyonight<CR>:ShowLualine<CR>:Goyo!<CR>]]",
+  { silent = true, desc = "Disable Goyo" }
+)
+
+-- view alpha (homescreen) buffer
+vim.keymap.set("n", "<leader>A", [[:Alpha<CR>]], { silent = true })
+
+-- close buffer and window
+vim.keymap.set("n", "<leader>ad", [[:bdelete <CR>]], { silent = true, desc = "Close buffer" })
