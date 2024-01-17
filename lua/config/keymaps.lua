@@ -5,7 +5,7 @@
 local Util = require("lazyvim.util")
 
 vim.api.nvim_create_user_command("FloatingTerm", function()
-  Util.float_term()
+  Util.terminal.open()
 end, {})
 
 -- centers c-d and c-u
@@ -62,20 +62,24 @@ vim.keymap.set("n", "<C-a>", [[gg<S-v>G]])
 vim.keymap.set("n", "<leader>mp", [[:MarkdownPreview<CR>]], { silent = true, desc = "Markdown Preview" })
 
 -- rmarkdown
-vim.keymap.set("n", "<leader>rb", [[i```{r}<CR>```<esc>O]])
-vim.keymap.set("n", "<leader>rk", [[:w <cr>:RMarkdown <CR>]], { silent = true })
+vim.keymap.set("n", "<leader>rb", [[i```{r}<CR>```<esc>O]], { desc = "R Block" })
+vim.keymap.set("n", "<leader>rkh", [[:w <cr>:RMarkdown <CR>]], { silent = true, desc = "HTML Knit RMD" })
+vim.keymap.set(
+  "n",
+  "<leader>rkp",
+  [[:w <cr>:RMarkdown pdf latex_engine="xelatex" <CR>]],
+  { silent = true, desc = "PDF Knit RMD" }
+)
 vim.keymap.set(
   "n",
   "<leader>rh",
-  [[i---<CR>title: ""<CR>author: ""<CR>date: "`r Sys.Date()`"<CR>output: html_document<CR>---<CR><CR>```{r setup, include=FALSE}<CR>knitr::opts_chunk$set(echo = TRUE)<CR>```<CR><CR>---<CR><CR>]]
+  [[i---<CR>title: ""<CR>author: "Connor Carpenter"<CR>date: "`r Sys.Date()`"<CR>output: html_document<CR>---<CR><CR>```{r setup, include=FALSE}<CR>knitr::opts_chunk$set(echo = TRUE)<CR>```<CR><CR>---<CR><CR>]],
+  { desc = "R Header" }
 )
 
 -- undotree
 vim.keymap.set("n", "<leader>ut", [[:UndotreeToggle <CR>]])
 vim.keymap.set("n", "<leader>up", [[:Telescope undo <CR>]])
-
--- lsp install
-vim.keymap.set("n", "<leader>il", [[:LspInstall <CR>]])
 
 -- functions to hide and show lualine
 vim.api.nvim_create_user_command("HideLualine", function()
@@ -86,11 +90,15 @@ vim.api.nvim_create_user_command("ShowLualine", function()
   require("lualine").hide({ place = { "statusline" }, unhide = true })
 end, {})
 
+-- lualine commands
+vim.keymap.set("n", "<leader>ub", [[:ShowLualine<CR>]], { silent = true, desc = "Show Lualine" })
+vim.keymap.set("n", "<leader>uB", [[:HideLualine<CR>]], { silent = true, desc = "Hide Lualine" })
+
 -- goyo (writing mode)
 vim.keymap.set(
   "n",
   "<leader>ge",
-  "[[:colorscheme catppuccin<CR>:set linebreak<CR>:set wrap<CR>:HideLualine<CR>:Goyo<CR>:Goyo 60%<CR>]]",
+  "[[:set linebreak<CR>:set wrap<CR>:HideLualine<CR>:Goyo<CR>:Goyo 60%<CR>]]",
   { silent = true, desc = "Enable Goyo" }
 )
 
@@ -106,3 +114,6 @@ vim.keymap.set("n", "<leader>A", [[:Alpha<CR>]], { silent = true })
 
 -- close buffer and window
 vim.keymap.set("n", "<leader>ad", [[:bdelete <CR>]], { silent = true, desc = "Close buffer" })
+
+-- better paste
+-- vim.api.nvim_set_keymap("n", "p", "p<CMD>%s/\\r//<CR>", { desc = "Better paste", silent = true })

@@ -7,4 +7,8 @@ return {
     --   vim.fn["mkdp#util#install"]()
     -- end,
   },
+
+  {
+    "ixru/nvim-markdown",
+  },
 }

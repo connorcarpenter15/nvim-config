@@ -34,6 +34,7 @@ return {
         ["<Leader>p"] = { name = "+Python" },
         ["<Leader>q"] = { name = "+Quit" },
         ["<Leader>r"] = { name = "+R" },
+        ["<Leader>rk"] = { name = "RMD Knit" },
         ["<Leader>u"] = { name = "+UI" },
         ["<Leader>w"] = { name = "+Windows" },
         ["<Leader>x"] = { name = "+Trouble" },
