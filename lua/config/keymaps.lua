@@ -4,10 +4,6 @@
 
 local Util = require("lazyvim.util")
 
-vim.api.nvim_create_user_command("FloatingTerm", function()
-  Util.terminal.open()
-end, {})
-
 -- centers c-d and c-u
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
@@ -29,18 +25,7 @@ vim.api.nvim_set_keymap("n", "C", '"_C', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "C", '"_C', { noremap = true, silent = true })
 
 -- python
-vim.keymap.set("n", "<leader>py", [[:set autochdir <CR> :FloatingTerm <CR> python3 <C-\><C-n>"#pi <CR>]])
 vim.keymap.set("n", "<leader>fp", [[:w <CR> :!black % <CR><CR>]])
-
--- c++
-vim.keymap.set(
-  "n",
-  "<leader>cp",
-  [[:set autochdir <CR> :FloatingTerm <CR> g++ -std=c++20 -o <C-\><C-n>"#pi<BS><BS><BS><BS> <C-\><C-n>"#pi && ./<C-\><C-n>"#pi<BS><BS><BS><BS> <CR>]]
-)
-
--- java
-vim.keymap.set("n", "<leader>jj", [[:cd %:h<cr> :w<CR>:!javac %<cr> :!java %:r<cr>]])
 
 -- telescope things
 vim.keymap.set("n", "<leader>fc", [[:Telescope colorscheme<cr>]])
@@ -50,7 +35,7 @@ vim.keymap.set("n", "<leader>fc", [[:Telescope colorscheme<cr>]])
 -- vim.keymap.set("n", "<leader>cu", [[:cd ..<cr>]])
 
 -- to replace all of the words that the cursor is on
-vim.keymap.set("n", "<leader>cs", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+vim.keymap.set("n", "<leader>ci", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 --open terminal buffer
 vim.keymap.set("n", "<leader>tm", [[:term <cr>]])
