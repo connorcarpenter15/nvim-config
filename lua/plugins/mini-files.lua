@@ -1,40 +1,43 @@
 return {
   { "nvim-neo-tree/neo-tree.nvim", enabled = false },
 
+  -- fast file system viewer, less intrusive oil.nvim
   {
     "echasnovski/mini.files",
+    lazy = false,
     opts = {
       windows = {
         preview = true,
         width_focus = 30,
         width_preview = 30,
       },
-      -- options = {
-      --   -- Whether to use for editing directories
-      --   -- Disabled by default in LazyVim because neo-tree is used for that
-      --   use_as_default_explorer = false,
-      -- },
+      options = {
+        permanent_delete = false, -- files are sent to ~/.local/share/nvim/mini.files/trash/
+        use_as_default_explorer = true, -- for nvim .
+      },
     },
     keys = {
+      -- open mini.files with current buffer's directory, if error is thrown
+      -- fallback to cwd
       {
         "<leader>e",
         function()
-          require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
+          local success, result = pcall(function()
+            return require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
+          end)
+
+          if not success then
+            require("mini.files").open(vim.loop.cwd(), true)
+          end
         end,
-        desc = "Open mini.files (dir of current file)",
-      },
-      {
-        "<leader>E",
-        function()
-          require("mini.files").open(vim.loop.cwd(), true)
-        end,
-        desc = "Open mini.files (cwd)",
+        desc = "Explore",
       },
     },
     config = function(_, opts)
       require("mini.files").setup(opts)
 
       local show_dotfiles = true
+      ---@diagnostic disable-next-line: unused-local
       local filter_show = function(fs_entry)
         return true
       end
@@ -54,6 +57,13 @@ return {
           local buf_id = args.data.buf_id
           -- Tweak left-hand side of mapping to your liking
           vim.keymap.set("n", "g.", toggle_dotfiles, { buffer = buf_id })
+        end,
+      })
+
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "MiniFilesActionRename",
+        callback = function(event)
+          require("lazyvim.util").lsp.on_rename(event.data.from, event.data.to)
         end,
       })
     end,
