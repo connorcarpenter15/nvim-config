@@ -12,9 +12,9 @@ return {
     -- make sure mason installs the server
     servers = {
       r_language_server = {},
-      pyright = {},
       clangd = {},
       ruff_lsp = {},
+      pyright = { enabled = true },
     },
     setup = {
       jdtls = function()

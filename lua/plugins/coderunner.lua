@@ -9,6 +9,12 @@ return {
     startinsert = true,
     filetype = {
       python = "python3 -u",
+      cpp = {
+        "cd $dir &&",
+        "g++ -std=c++11 $fileName",
+        "-o /tmp/$fileNameWithoutExt &&",
+        "/tmp/$fileNameWithoutExt",
+      },
     },
     term = {
       position = "bot", -- horiz, top, vert
