@@ -15,10 +15,11 @@ return {
         "-o /tmp/$fileNameWithoutExt &&",
         "/tmp/$fileNameWithoutExt",
       },
+      matlab = { "cd $dir &&", "matlab -batch \"run('$fileName')\"" },
     },
     term = {
-      position = "bot", -- horiz, top, vert
-      size = 18,
+      position = "vert", -- horiz, top, vert
+      size = 56,
     },
     float = {
       border = "rounded",
