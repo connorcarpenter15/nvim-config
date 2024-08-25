@@ -14,15 +14,15 @@ vim.keymap.set("n", "N", "Nzzzv")
 
 -- allow changing and deleting without overriding current paste registers
 -- in otherwords automatically delete or change to the void register
-vim.api.nvim_set_keymap("n", "d", '"_d', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "d", '"_d', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "D", '"_D', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "D", '"_D', { noremap = true, silent = true })
-
-vim.api.nvim_set_keymap("n", "c", '"_c', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "c", '"_c', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "C", '"_C', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "C", '"_C', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "d", '"_d', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("v", "d", '"_d', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "D", '"_D', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("v", "D", '"_D', { noremap = true, silent = true })
+--
+-- vim.api.nvim_set_keymap("n", "c", '"_c', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("v", "c", '"_c', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("n", "C", '"_C', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap("v", "C", '"_C', { noremap = true, silent = true })
 
 -- python
 vim.keymap.set("n", "<leader>fp", [[:w <CR> :!black % <CR><CR>]])
