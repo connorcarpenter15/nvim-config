@@ -12,7 +12,7 @@ return {
         "clangd",
         "clang-format",
         "css-lsp",
-        "deno",
+        -- "deno",
         "html-lsp",
         "json-lsp",
         "ruff",

@@ -19,7 +19,7 @@ return {
     },
     term = {
       position = "vert", -- horiz, top, vert
-      size = 56,
+      size = 93,
     },
     float = {
       border = "rounded",
