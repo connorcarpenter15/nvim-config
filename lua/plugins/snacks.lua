@@ -18,10 +18,9 @@ return {
       width = 45,
       preset = {
         keys = {
-          { icon = "", key = "f", desc = "Explore", action = "<leader><leader>" },
-          { icon = "󰱼", key = "e", desc = "Find File", action = ":Telescope find_files <CR>" },
+          { icon = "", key = "e", desc = "Explore", action = "<leader>e" },
+          { icon = "󰱼", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('oldfiles')" },
           { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-          { icon = " ", key = "o", desc = "Old Files", action = ":lua Snacks.dashboard.pick('oldfiles')" },
           { icon = "", key = "g", desc = "Lazygit", action = "<leader>gg" },
           {
             icon = " ",
