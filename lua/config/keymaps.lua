@@ -95,7 +95,7 @@ vim.keymap.set(
 )
 
 -- view alpha (homescreen) buffer
-vim.keymap.set("n", "<leader>A", [[:Alpha<CR>]], { silent = true })
+-- vim.keymap.set("n", "<leader>A", [[:Alpha<CR>]], { silent = true })
 
 -- close buffer and window
 vim.keymap.set("n", "<leader>ad", [[:bdelete <CR>]], { silent = true, desc = "Close buffer" })
