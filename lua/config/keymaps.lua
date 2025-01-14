@@ -94,11 +94,11 @@ vim.keymap.set(
   { silent = true, desc = "Disable Goyo" }
 )
 
--- view alpha (homescreen) buffer
--- vim.keymap.set("n", "<leader>A", [[:Alpha<CR>]], { silent = true })
-
 -- close buffer and window
 vim.keymap.set("n", "<leader>ad", [[:bdelete <CR>]], { silent = true, desc = "Close buffer" })
 
 -- better paste
 -- vim.api.nvim_set_keymap("n", "p", "p<CMD>%s/\\r//<CR>", { desc = "Better paste", silent = true })
+
+-- load dashboard with snacks.nvim
+vim.keymap.set("n", "<leader>A", [[:lua Snacks.dashboard() <CR> ]], { silent = true, desc = "Load Dashboard" })
