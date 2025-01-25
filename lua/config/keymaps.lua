@@ -2,8 +2,6 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-local Util = require("lazyvim.util")
-
 -- centers c-d and c-u
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
@@ -24,21 +22,8 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- vim.api.nvim_set_keymap("n", "C", '"_C', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap("v", "C", '"_C', { noremap = true, silent = true })
 
--- python
-vim.keymap.set("n", "<leader>fp", [[:w <CR> :!black % <CR><CR>]])
-
--- telescope things
-vim.keymap.set("n", "<leader>fc", [[:Telescope colorscheme<cr>]])
-
--- TODO change directories
--- vim.keymap.set("n", "<leader>cd", [[:cd %:h<cr>]])
--- vim.keymap.set("n", "<leader>cu", [[:cd ..<cr>]])
-
 -- to replace all of the words that the cursor is on
 vim.keymap.set("n", "<leader>ci", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-
---open terminal buffer
-vim.keymap.set("n", "<leader>tm", [[:term <cr>]])
 
 -- select full file
 vim.keymap.set("n", "<C-a>", [[gg<S-v>G]])
@@ -102,3 +87,67 @@ vim.keymap.set("n", "<leader>ad", [[:bdelete <CR>]], { silent = true, desc = "Cl
 
 -- load dashboard with snacks.nvim
 vim.keymap.set("n", "<leader>A", [[:lua Snacks.dashboard() <CR> ]], { silent = true, desc = "Load Dashboard" })
+
+-- for SML
+vim.keymap.set("n", "<leader>ms", [[:SMLReplStart <CR>]], { silent = true, desc = "SML Repl Start" })
+
+-- for vimtex
+vim.keymap.set("n", "<leader>vl", ":VimtexCompile<CR>")
+vim.keymap.set("n", "<leader>vL", ":VimtexCompileSS<CR>")
+vim.keymap.set("n", "<leader>vr", ":VimtexView<CR>")
+vim.keymap.set("n", "<leader>vc", ":VimtexClean<CR>")
+vim.keymap.set("n", "<leader>vC", ":VimtexCleanF<CR>")
+vim.keymap.set("n", "<leader>vo", ":VimtexCompileOutput<CR>")
+vim.keymap.set("n", "<leader>vk", ":VimtexStop<CR>")
+vim.keymap.set("n", "<leader>vK", ":VimtexStopAll<CR>")
+vim.keymap.set("n", "<leader>vt", ":VimtexTocOpen<CR>")
+vim.keymap.set("n", "<leader>vT", ":VimtexTocToggle<CR>")
+vim.keymap.set("n", "<leader>vi", ":VimtexInfo<CR>")
+vim.keymap.set("n", "<leader>vI", ":VimtexInfoF<CR>")
+vim.keymap.set("n", "<leader>vx", ":VimtexReload<CR>")
+vim.keymap.set("n", "<leader>vX", ":VimtexReloadState<CR>")
+vim.keymap.set("n", "<leader>vv", ":VimtexView<CR>")
+vim.keymap.set("n", "<leader>ve", ":VimtexErrors<CR>")
+vim.keymap.set("n", "<leader>va", ":VimtexContextMenu<CR>")
+vim.keymap.set("n", "<leader>vg", ":VimtexStatus<CR>")
+vim.keymap.set("n", "<leader>vq", ":VimtexLog<CR>")
+vim.keymap.set("n", "<leader>vs", ":VimtexToggleMain<CR>")
+vim.keymap.set("n", "<leader>vm", ":VimtexImapsList<CR>")
+
+-- note: these will work in every filetype
+local abbrevations = {
+  { "dont", "don't" },
+  { "shouldnt", "shouldn't" },
+  { "cant", "can't" },
+  { "wont", "won't" },
+  { "wouldnt", "wouldn't" },
+  { "seperate", "separate" },
+  { "teh", "the" },
+  { "thats", "that's" },
+  { "itll", "it'll" },
+}
+for _, v in ipairs(abbrevations) do
+  vim.cmd(string.format("iabbrev %s %s", v[1], v[2]))
+end
+
+vim.cmd("cnoreabbrev Set  set")
+vim.cmd("cnoreabbrev Wq wq")
+vim.cmd("cnoreabbrev WQ wq")
+vim.cmd("cnoreabbrev X LazyExtras")
+
+vim.api.nvim_create_user_command("W", "w", { nargs = 0 })
+vim.api.nvim_create_user_command("E", "e", { nargs = 0 })
+vim.api.nvim_create_user_command("Q", "qa", { nargs = 0 })
+vim.api.nvim_create_user_command("Wq", "wq", { nargs = 0 })
+vim.api.nvim_create_user_command("WQ", "wq", { nargs = 0 })
+
+-- get word count of current file
+vim.keymap.set("n", "<C-S-C>", function()
+  vim.notify("Word Count: " .. vim.fn.wordcount().words, vim.log.levels.INFO, {
+    title = "Word Count",
+  })
+end)
+
+-- better scrolling with mouse
+vim.keymap.set("n", "<ScrollWheelUp>", "<C-y>")
+vim.keymap.set("n", "<ScrollWheelDown>", "<C-e>")

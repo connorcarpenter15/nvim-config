@@ -74,6 +74,24 @@ return {
       desc = "Toggle Terminal",
       mode = { "n", "t" },
     },
+    {
+      "<leader>tm",
+      function()
+        Snacks.terminal.toggle("zsh", {
+          cwd = vim.fn.getcwd(),
+          env = { TERM = "xterm-256color" },
+          win = {
+            relative = "editor",
+            width = 0.8,
+            height = 0.8,
+            border = "rounded",
+            padding = { 4, 1, 1, 1 }, -- Top, right, bottom, left padding
+          },
+        })
+      end,
+      desc = "Toggle Terminal (float)",
+      mode = { "n", "t" },
+    },
     -- <C-.>, <C-S-/>
     {
       "<leader>z",

@@ -11,7 +11,7 @@ return {
         "black",
         "clangd",
         "clang-format",
-        "css-lsp",
+        -- "css-lsp",
         -- "deno",
         "html-lsp",
         "json-lsp",
