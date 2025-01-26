@@ -10,17 +10,55 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- allow changing and deleting without overriding current paste registers
--- in otherwords automatically delete or change to the void register
--- vim.api.nvim_set_keymap("n", "d", '"_d', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "d", '"_d', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "D", '"_D', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "D", '"_D', { noremap = true, silent = true })
---
--- vim.api.nvim_set_keymap("n", "c", '"_c', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "c", '"_c', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("n", "C", '"_C', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap("v", "C", '"_C', { noremap = true, silent = true })
+-- --------------------------------------- WINDOWS BUFFERS AND TABS --------------------------------
+
+-- tab navigation
+vim.keymap.set("n", "<S-h>", "<cmd>tabprev<cr>", { desc = "Previous Tab" })
+vim.keymap.set("n", "<S-l>", "<cmd>tabnext<cr>", { desc = "Next Tab" })
+
+vim.keymap.set("n", "<leader><Tab>q", "<cmd>tabclose<cr>", { desc = "Close Tab" })
+
+-- cd to root dir of current buffer (does some weird things sometimes)
+vim.keymap.set("n", "<leader>bl", function()
+  local bufname = vim.api.nvim_buf_get_name(0)
+  local root = vim.fs.find({ ".git", "Makefile" }, { upward = true, path = vim.fs.dirname(bufname) })[1]
+  local root_dir = root and vim.fs.dirname(root)
+
+  if root then
+    vim.uv.chdir(root_dir)
+  else
+    vim.cmd([[cd %:h]])
+  end
+  vim.notify(root_dir or vim.fn.getcwd(), vim.log.levels.INFO, {
+    title = "Buffer Locate",
+  })
+end, { desc = "Buffer Locate", silent = true })
+
+vim.keymap.set("n", "<leader>q", "<C-W>c", { desc = "Close Window", silent = true })
+
+-- splits
+vim.keymap.set("n", "|", "<cmd>vsplit<cr>", { remap = true, silent = true, desc = "Vertical Split" })
+vim.keymap.set("n", "_", "<cmd>split<cr>", { remap = true, silent = true, desc = "Vertical Split" })
+
+vim.keymap.set("n", "<leader>o", "<cmd>silent! !open %<cr>", { desc = "Open Buffer in System Viewer" })
+
+-- --------------------------------- TAB RELATED STUFF --------------------------------------------
+
+-- vim.keymap.set("n", "<C-space>", "<cmd>$tabnew<cr>")
+vim.keymap.set("n", "<C-space>", function()
+  if vim.fn.tabpagenr("$") >= 5 then
+    vim.notify("Thats a lotta tabs...", vim.log.levels.WARN, { title = "Tabs" })
+  else
+    vim.cmd("tabe")
+  end
+end)
+-- vim.keymap.set("n", "<leader>1", "<cmd>silent! tabn 1<cr>", { silent = true, desc = "Tab 1" })
+-- vim.keymap.set("n", "<leader>2", "<cmd>silent! tabn 2<cr>", { silent = true, desc = "Tab 2" })
+-- vim.keymap.set("n", "<leader>3", "<cmd>silent! tabn 3<cr>", { silent = true, desc = "Tab 3" })
+-- vim.keymap.set("n", "<leader>4", "<cmd>silent! tabn 4<cr>", { silent = true, desc = "Tab 4" })
+-- vim.keymap.set("n", "<leader>5", "<cmd>silent! tabn 5<cr>", { silent = true, desc = "Tab 5" })
+
+-- ------------------------------------------------------------------------------------------------
 
 -- to replace all of the words that the cursor is on
 vim.keymap.set("n", "<leader>ci", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
@@ -89,9 +127,9 @@ vim.keymap.set("n", "<leader>ad", [[:bdelete <CR>]], { silent = true, desc = "Cl
 vim.keymap.set("n", "<leader>A", [[:lua Snacks.dashboard() <CR> ]], { silent = true, desc = "Load Dashboard" })
 
 -- for SML
-vim.keymap.set("n", "<leader>ms", [[:SMLReplStart <CR>]], { silent = true, desc = "SML Repl Start" })
+vim.keymap.set("n", "<leader>rs", [[:SMLReplStart <CR>]], { silent = true, desc = "SML Repl Start" })
 
--- for vimtex
+-- --------------------------------- VIMTEX --------------------------------------------
 vim.keymap.set("n", "<leader>vl", ":VimtexCompile<CR>")
 vim.keymap.set("n", "<leader>vL", ":VimtexCompileSS<CR>")
 vim.keymap.set("n", "<leader>vr", ":VimtexView<CR>")

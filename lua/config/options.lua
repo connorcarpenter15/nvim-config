@@ -27,5 +27,5 @@ opt.incsearch = true
 opt.scrolloff = 8
 opt.relativenumber = true
 opt.numberwidth = 1
-vim.g.lazyvim_picker = "telescope"
 vim.g.snacks_animate = false
+opt.showtabline = 0

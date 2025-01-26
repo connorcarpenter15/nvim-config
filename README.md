@@ -20,5 +20,4 @@ docs](https://www.lazyvim.org/) for more information.
 Here is a list of all my custom features:
 
 - Enable supertab for completion and snippets through [hrsh7th/nvim-cmp](https://github.com/hrsh7th/nvim-cmp)
-- Add fzf-native for telescope with [nvim-telescope/telescope-fzf-native.nvim](https://github.com/nvim-telescope/telescope-fzf-native.nvim)
 - Support for RMarkdown using [vim-pandoc/vim-rmarkdown](https://github.com/vim-pandoc/vim-rmarkdown)
