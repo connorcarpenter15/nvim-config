@@ -30,6 +30,7 @@
   "neoconf.nvim": { "branch": "main", "commit": "a4d1d337e23a087847f7a1d2bc4420ce7ad355f4" },
   "noice.nvim": { "branch": "main", "commit": "eaed6cc9c06aa2013b5255349e4f26a6b17ab70f" },
   "nui.nvim": { "branch": "main", "commit": "53e907ffe5eedebdca1cd503b00aa8692068ca46" },
+  "nvim-colorizer.lua": { "branch": "master", "commit": "39142aa1390d6ccdca57cb6dc5b2c7bfed460ffe" },
   "nvim-lint": { "branch": "master", "commit": "789b7ada1b4f00e08d026dffde410dcfa6a0ba87" },
   "nvim-lspconfig": { "branch": "master", "commit": "e5bf88e5ea1c4cea5ea96b1e970cb264f7a401a1" },
   "nvim-markdown": { "branch": "master", "commit": "d1463e20948ea9ebdd8fb77ecb082e93df93def9" },
@@ -53,7 +54,7 @@
   "vim-pandoc-syntax": { "branch": "master", "commit": "16939cda184ff555938cc895cc62477c172997f9" },
   "vim-rmarkdown": { "branch": "master", "commit": "a1787cb55e45b8778eaed7b392648deb4706cd0b" },
   "vim-svelte-plugin": { "branch": "master", "commit": "fcc81292340c0969e83131021c5a6c9aa0c741dc" },
-  "vimtex": { "branch": "master", "commit": "b4eb43603dccf33b7d8597fbe1403c6430a24886" },
+  "vimtex": { "branch": "master", "commit": "83e331dcad5ce28012e656eea3906b5b897db2ba" },
   "which-key.nvim": { "branch": "main", "commit": "6cebd86917df559a88de0f806b2989799c6e6423" },
   "wrapping-paper.nvim": { "branch": "main", "commit": "56fa4f3757a29aab7c8ff60a53ae12ed591e4c52" }
 }

@@ -1,53 +1,50 @@
+-- default LazyVim plugin, adds floating window for remembering keymaps
 return {
   "folke/which-key.nvim",
-  event = "VeryLazy",
-  opts = function()
-    return {
-      plugins = {
-        marks = true, -- shows a list of your marks on ' and `
-        registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
-        spelling = {
-          enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
-          suggestions = 20, -- how many suggestions should be shown in the list?
-        },
-        presets = {
-          operators = true, -- adds help for operators like d, y, ...
-          motions = true, -- adds help for motions
-          text_objects = true, -- help for text objects triggered after entering an operator
-          windows = true, -- default bindings on <c-w>
-          nav = true, -- misc bindings to work with windows
-          z = true, -- bindings for folds, spelling and others prefixed with z
-          g = true, -- bindings for prefixed with g
-        },
+  lazy = false,
+  opts = {
+    preset = "modern",
+    filter = function(mapping)
+      -- exclude mappings without a description
+      return mapping.desc and mapping.desc ~= ""
+    end,
+    show_help = false,
+    plugins = {
+      marks = false,
+      spelling = {
+        enabled = false,
       },
-      defaults = {
-        mode = { "n", "v" },
-        { "g", desc = "+goto" },
-        { "<Leader>b", desc = "+Buffer" },
-        { "<Leader>c", desc = "+Code" },
-        { "<Leader>f", desc = "+Find" },
-        { "<Leader>gh", desc = "+Hunks" },
-        { "<Leader>g", desc = "+Git" },
-        { "<Leader>l", desc = "+Lazy" },
-        { "<Leader>s", desc = "+Search" },
-        { "<Leader><tab>", desc = "+Tabs" },
-        { "<Leader>p", desc = "+Python" },
-        { "<Leader>q", desc = "+Quit" },
-        { "<Leader>r", desc = "+R" },
-        { "<Leader>rk", desc = "RMD Knit" },
-        { "<Leader>u", desc = "+UI" },
-        { "<Leader>w", desc = "+Windows" },
-        { "<Leader>x", desc = "+Trouble" },
-        -- ["<Leader>Y"] = { name = "Yank History" },
-        { "<LocalLeader>s", desc = "+Search" },
-        { "]", desc = "+next" },
-        { "[", desc = "+prev" },
-      },
-    }
-  end,
-  config = function(_, opts)
-    local wk = require("which-key")
-    wk.setup(opts)
-    wk.add(opts.defaults)
-  end,
+    },
+    win = {
+      no_overlap = false,
+      border = "rounded",
+      padding = { 1, 1, 1, 1 }, -- extra window padding [top, right, bottom, left]
+    },
+    spec = {
+      mode = { "n", "v" },
+      -- { "<leader>t", group = "+tab" },
+      { "<R>", group = "run", icon = "" },
+      { "<leader>dph", hidden = true },
+      { "<leader>dpp", hidden = true },
+      { "<leader>d", proxy = false },
+    },
+  },
+  keys = {
+    { "<leader>K", nil },
+    { "<leader><Tab><Tab>", nil },
+    { "<leader><Tab>]", nil },
+    { "<leader><Tab>[", nil },
+    { "<leader><Tab>f", nil },
+    { "<leader><Tab>l", nil },
+    { "<leader><Tab>l", nil },
+    { "<leader>-", nil },
+    { "<leader>w-", nil },
+    { "<leader>w|", nil },
+    { "<leader>|", nil },
+    { "<leader>bb", nil },
+    { "<leader>bD", nil },
+    { "<leader>ft", nil },
+    { "<leader>fT", nil },
+    { "<leader>qq", nil },
+  },
 }

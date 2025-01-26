@@ -1,3 +1,6 @@
+do
+  return {}
+end
 return {
   -- add tokyonight
   {

@@ -152,6 +152,8 @@ vim.keymap.set("n", "<leader>vq", ":VimtexLog<CR>")
 vim.keymap.set("n", "<leader>vs", ":VimtexToggleMain<CR>")
 vim.keymap.set("n", "<leader>vm", ":VimtexImapsList<CR>")
 
+-- ------------------------------------- ABBREVIATIONS --------------------------------------------
+
 -- note: these will work in every filetype
 local abbrevations = {
   { "dont", "don't" },
