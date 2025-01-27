@@ -7,6 +7,8 @@ local get_dir_with_fallback = function()
     or vim.uv.cwd()
 end
 
+vim.g.lazyvim_picker = snacks
+
 return {
   "folke/snacks.nvim",
   opts = {
