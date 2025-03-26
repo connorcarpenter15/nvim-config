@@ -8,6 +8,7 @@ return {
     mode = "term",
     startinsert = true,
     filetype = {
+      typescript = "cd $dir && ts-node $fileName",
       python = "python3 -u",
       cpp = {
         "cd $dir &&",

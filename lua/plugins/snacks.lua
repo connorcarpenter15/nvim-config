@@ -21,7 +21,7 @@ return {
       preset = {
         keys = {
           { icon = "", key = "e", desc = "Explore", action = "<leader>e" },
-          { icon = "󰱼", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('oldfiles')" },
+          { icon = "󰱼", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },
           { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
           { icon = "", key = "g", desc = "Lazygit", action = "<leader>gg" },
           {
