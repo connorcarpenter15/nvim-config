@@ -191,3 +191,33 @@ end)
 -- better scrolling with mouse
 vim.keymap.set("n", "<ScrollWheelUp>", "<C-y>")
 vim.keymap.set("n", "<ScrollWheelDown>", "<C-e>")
+
+-- ------------------------------------- CMU SHARK --------------------------------------------
+
+vim.keymap.set("n", "<leader>sc", function()
+  local filename = vim.fn.expand("%")
+  local remote_host = "ccarpent@sandshark.ics.cs.cmu.edu"
+
+  -- Extract the directory name from the local path
+  local local_dir = vim.fn.fnamemodify(filename, ":h")
+  local dir_name = vim.fn.fnamemodify(local_dir, ":t")
+  local base_name = vim.fn.fnamemodify(filename, ":t")
+
+  -- Construct the remote path
+  local remote_path = "~/private/" .. dir_name .. "/" .. base_name
+
+  local password = vim.fn.inputsecret("Enter remote password: ")
+
+  if password then
+    local command = "sshpass -p '"
+      .. password
+      .. "' scp "
+      .. filename
+      .. " "
+      .. remote_host
+      .. ":"
+      .. remote_path
+      .. " && exit"
+    require("snacks").terminal.open(command)
+  end
+end, { desc = "CMU Shark Copy", silent = true })
