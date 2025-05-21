@@ -28,3 +28,4 @@ opt.scrolloff = 8
 opt.relativenumber = true
 opt.numberwidth = 1
 opt.showtabline = 0
+opt.shiftwidth = 4

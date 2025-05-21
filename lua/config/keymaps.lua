@@ -206,18 +206,14 @@ vim.keymap.set("n", "<leader>sc", function()
   -- Construct the remote path
   local remote_path = "~/private/" .. dir_name .. "/" .. base_name
 
-  local password = vim.fn.inputsecret("Enter remote password: ")
+  local password = vim.env.CMU_REMOTE_PASSWORD
 
   if password then
-    local command = "sshpass -p '"
-      .. password
-      .. "' scp "
-      .. filename
-      .. " "
-      .. remote_host
-      .. ":"
-      .. remote_path
-      .. " && exit"
+    local command = "sshpass -p '" .. password .. "' rsync " .. filename .. " " .. remote_host .. ":" .. remote_path
     require("snacks").terminal.open(command)
+  else
+    vim.notify("Unable to sync to remote: password unknown")
   end
+
+  vim.notify("File synced to CMU Shark")
 end, { desc = "CMU Shark Copy", silent = true })
