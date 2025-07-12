@@ -200,7 +200,8 @@ vim.keymap.set("n", "<leader>sc", function()
 
   -- Extract the directory name from the local path
   local local_dir = vim.fn.fnamemodify(filename, ":h")
-  local dir_name = vim.fn.fnamemodify(local_dir, ":t")
+  -- local dir_name = vim.fn.fnamemodify(local_dir, ":t")
+  local dir_name = "malloclab"
   local base_name = vim.fn.fnamemodify(filename, ":t")
 
   -- Construct the remote path

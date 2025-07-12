@@ -19,3 +19,20 @@ vim.api.nvim_create_autocmd({ "BufWritePre" }, {
     vim.fn.setpos(".", save_cursor)
   end,
 })
+
+-- format on save
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*",
+  callback = function(args)
+    require("conform").format({ bufnr = args.buf })
+  end,
+})
+
+-- set tab width for C files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp" },
+  callback = function()
+    vim.opt.tabstop = 4
+    vim.opt.shiftwidth = 4
+  end,
+})
