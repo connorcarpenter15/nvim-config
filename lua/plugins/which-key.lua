@@ -1,32 +1,37 @@
 -- default LazyVim plugin, adds floating window for remembering keymaps
 return {
   "folke/which-key.nvim",
-  lazy = false,
   opts = {
-    preset = "modern",
+    icons = { mappings = true }, -- disable icons
     filter = function(mapping)
-      -- exclude mappings without a description
+      -- exclude mappings without a description but enable vimtext keymaps
+      if type(mapping.rhs) == "string" and mapping.rhs:find("vimtex") then
+        mapping.rhs = mapping.rhs:gsub("vimtex%-", "")
+        mapping.rhs = mapping.rhs:sub(1, -2)
+        return true
+      end
       return mapping.desc and mapping.desc ~= ""
     end,
     show_help = false,
+    delay = function(ctx)
+      return ctx.plugin and 0 or 350
+    end,
     plugins = {
-      marks = false,
-      spelling = {
-        enabled = false,
-      },
+      marks = true,
+      spelling = false,
+      presets = { motions = false, operators = false },
     },
     win = {
       no_overlap = false,
       border = "rounded",
-      padding = { 1, 1, 1, 1 }, -- extra window padding [top, right, bottom, left]
     },
     spec = {
-      mode = { "n", "v" },
-      -- { "<leader>t", group = "+tab" },
-      { "<R>", group = "run", icon = "" },
-      { "<leader>dph", hidden = true },
-      { "<leader>dpp", hidden = true },
-      { "<leader>d", proxy = false },
+      {
+        mode = { "n", "v" },
+        { "<R>", group = "run", icon = "" },
+        { "<leader>q", group = "Close Window" },
+        { "<leader>a", group = "+ai" },
+      },
     },
   },
   keys = {

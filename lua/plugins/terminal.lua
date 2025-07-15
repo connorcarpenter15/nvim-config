@@ -1,53 +1,36 @@
--- use the $SHELL env variable... except in wsl where i wanna use fish
-vim.g.shell = LazyVim.is_win() and vim.o.shell or "zsh"
+-- local shell = vim.fn.has("wsl") == 1 and "/usr/bin/fish" or nil
 return {
   "folke/snacks.nvim",
   opts = {
     terminal = {
       enabled = true,
       win = { keys = { nav_l = "<C-l>", nav_j = "<C-j>", nav_k = "<C-k>" } },
-      shell = vim.g.shell,
     },
   },
   keys = {
+    -- note: this assumes your terminal can recognize the <C-/> and <C-S-/> keys
+    { "<C-S-_>", nil },
+    { "<C-_>", nil },
     {
       "<C-q>",
       function()
-        Snacks.terminal.toggle()
+        require("snacks.terminal").toggle(nil, {
+          win = { position = "bottom" },
+          env = { SNACKS_TERM_ID = "bottom_terminal" },
+        })
       end,
-      desc = "Toggle Terminal",
+      desc = "Toggle bottom terminal",
       mode = { "n", "t" },
     },
     {
-      "<C-S-/>",
+      "<C-s-/>",
       function()
-        Snacks.terminal.toggle(vim.g.shell, {
-          win = {
-            position = "float",
-            height = 0.8,
-            width = 0.8,
-            border = "rounded",
-          },
+        require("snacks.terminal").toggle(nil, {
+          win = { position = "float", border = "rounded" },
+          env = { SNACKS_TERM_ID = "floating_terminal" },
         })
       end,
-      desc = "Toggle Floating Terminal",
-      mode = { "n", "t" },
-    },
-    {
-      "<C-S-Q>",
-      function()
-        Snacks.terminal.toggle(vim.g.shell, {
-          win = {
-            relative = "editor",
-            position = "float",
-            height = 0.8,
-            width = 0.8,
-            border = "rounded",
-          },
-          -- cwd = vim.loop.cwd(),
-        })
-      end,
-      desc = "Toggle Floating Terminal",
+      desc = "Toggle floating terminal",
       mode = { "n", "t" },
     },
   },

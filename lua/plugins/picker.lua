@@ -1,43 +1,127 @@
--- set the dir to the directory of the current buffer if possible, then
--- the dir of the alternate buffer, then the cwd
-local get_dir_with_fallback = function()
-  local bufdir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":h")
-  return bufdir ~= "" and bufdir
-    or vim.fn.bufexists(vim.fn.bufnr("#")) and vim.fn.fnamemodify(vim.fn.bufname(vim.fn.bufnr("#")), ":h")
-    or vim.uv.cwd()
-end
-
-vim.g.lazyvim_picker = snacks
-
 return {
   "folke/snacks.nvim",
   opts = {
     picker = {
-      cycle = true,
-      layout = function()
-        return vim.o.columns >= 120 and "telescope" or "vertical"
-      end,
-      -- layout = "telescope",
+      layout = {
+        cycle = true,
+        preset = function()
+          if vim.o.lines <= 23 then
+            return "small"
+          elseif vim.o.columns <= 130 then
+            return "vertical"
+          else
+            return "default"
+          end
+        end,
+      },
+      layouts = {
+        vscode = {
+          layout = {
+            preview = false,
+            backdrop = false,
+            row = 1,
+            width = 0.4,
+            min_width = 80,
+            height = 0.4,
+            border = "none",
+            box = "vertical",
+            { win = "input", height = 1, border = "rounded", title = "{title} {live} {flags}", title_pos = "center" },
+            { win = "list", border = "single" },
+            { win = "preview", title = "{preview}", border = "rounded" },
+          },
+        },
+        -- this is just vertical but without a preview
+        small = {
+          layout = {
+            box = "horizontal",
+            width = 0.8,
+            min_width = 60,
+            height = 0.8,
+            {
+              box = "vertical",
+              border = "rounded",
+              title = "{title} {live} {flags}",
+              { win = "input", height = 1, border = "bottom" },
+              { win = "list", border = "none" },
+            },
+          },
+        },
+        vertical = {
+          layout = {
+            box = "vertical",
+            width = 0.8,
+            min_width = 40,
+            height = 0.8,
+            min_height = 20,
+            {
+              box = "vertical",
+              border = "rounded",
+              title = "{title} {live} {flags}",
+              { win = "input", height = 1, border = "bottom" },
+              { win = "list", border = "none" },
+            },
+            { win = "preview", title = "{preview}", height = 0.4, border = "rounded" },
+          },
+        },
+        default = {
+          layout = {
+            box = "horizontal",
+            width = 0.85,
+            min_width = 85,
+            height = 0.8,
+            {
+              box = "vertical",
+              border = "rounded",
+              title = "{title} {live} {flags}",
+              { win = "input", height = 1, border = "bottom" },
+              { win = "list", border = "none" },
+            },
+            { win = "preview", title = "{preview}", border = "rounded", width = 0.5 },
+          },
+        },
+      },
       formatters = {
         file = {
           filename_first = true, -- display filename before the file path
+          truncate = 60, -- truncate to rougthly this length
         },
+      },
+      ---@class snacks.picker.previewers.Config
+      previewers = {
+        git = {
+          builtin = false,
+          cmd = { "delta" },
+        },
+      },
+      matcher = {
+        frecency = true,
+        cwd_bonus = true,
       },
       win = {
         -- input window
         input = {
           keys = {
             -- custom
-            ["<S-Tab>"] = { "", mode = { "i", "n" } },
-            ["<C-a>"] = { "", mode = { "i", "n" } },
+            ["<C-a>"] = { nil, mode = { "i", "n" } },
+            ["<Tab>"] = { "cycle_win", mode = { "i", "n" } },
+            ["<S-CR>"] = { "tab", mode = { "i", "n" } },
+            ["<C-CR>"] = { "tab", mode = { "i", "n" } },
+
             ["<C-p>"] = { "history_back", mode = { "i", "n" } },
             ["<C-n>"] = { "history_forward", mode = { "i", "n" } },
+
+            -- <C-/> conflicts with commenting keymap
             ["<c-s-/>"] = { "toggle_help", mode = { "i", "n" } },
-            ["<a-o>"] = { "toggle_maximize", mode = { "i", "n" } },
-            ["<Esc>"] = { "close", mode = { "n", "i" } },
-            ["<Tab>"] = { "cycle_win", mode = { "i", "n" } },
-            ["<c-space>"] = { "edit_tab", mode = { "i", "n" } },
+            ["<c-/>"] = { "toggle_help", mode = { "i", "n" } },
+
+            -- exit when exiting insert mode
+            ["<Esc>"] = { "cancel", mode = { "n", "i" } },
+
+            -- misc
+            ["<S-Tab>"] = { "cycle_win", mode = { "i", "n" } },
+            ["<C-Space>"] = { "toggle_live", mode = { "i", "n" } },
             ["<c-s>"] = { "edit_split", mode = { "i", "n" } },
+            ["<c-t>"] = { "trouble_open", mode = { "i", "n" } },
 
             -- scrolling
             ["<c-f>"] = { "preview_scroll_down", mode = { "i", "n" } },
@@ -49,9 +133,10 @@ return {
             ["<c-g>"] = { "toggle_live", mode = { "i", "n" } },
             ["<a-y>"] = { "toggle_follow", mode = { "i", "n" } },
 
-            -- remap to something else?
+            -- alt mappings
+            ["<a-o>"] = { "toggle_maximize", mode = { "i", "n" } },
             ["<a-i>"] = { "toggle_ignored", mode = { "i", "n" } },
-            ["<a-u>"] = { "toggle_hidden", mode = { "i", "n" } },
+            ["<a-.>"] = { "toggle_hidden", mode = { "i", "n" } },
             ["<a-p>"] = { "toggle_preview", mode = { "i", "n" } },
           },
           b = {
@@ -67,41 +152,23 @@ return {
         -- preview window
         preview = {
           keys = {
+            ["<a-o>"] = { "toggle_maximize", mode = { "i", "n" } },
+            ["<S-Tab>"] = { "focus_input" },
             ["<Tab>"] = { "focus_input" },
             ["<Esc>"] = "close",
             ["i"] = "focus_input",
           },
-          -- wo = { number = false, cursorline = false, statuscolumn = "" },
         },
       },
     },
   },
-  dependencies = {
-    "folke/todo-comments.nvim",
-    keys = {
-      {
-        "<leader>st",
-        function()
-          ---@diagnostic disable-next-line: undefined-field
-          Snacks.picker.todo_comments({ cwd = vim.fn.expand("%:h") })
-        end,
-        desc = "Todo",
-      },
-      {
-        "<leader>sT",
-        function()
-          ---@diagnostic disable-next-line: undefined-field
-          Snacks.picker.todo_comments({ keywords = { "TODO", "FIX", "FIXME" }, cwd = vim.fn.expand("%:h") })
-        end,
-        desc = "Todo/Fix/Fixme",
-      },
-    },
-  },
   keys = {
+    -- stylua: ignore start
     ----------- PICKER KEYMAPS -------------
     { "<leader>gc", nil },
     { "<leader>sg", nil },
     { "<leader>fb", nil },
+    { "<leader>fB", nil },
     { "<leader>fr", nil },
     { "<leader>ff", nil },
     { "<leader>sc", nil },
@@ -110,9 +177,12 @@ return {
     { "<leader>sG", nil },
     { "<leader>sl", nil },
     { '<leader>s"', nil },
+    { "<leader>sd", nil }, -- search diagnostics
+    { "<leader>sD", nil }, -- buffer diagnostics
+    { "<leader>s/", nil }, -- search history
     { "<leader>qp", nil },
     { "<leader>sB", nil },
-    -- { "<leader>fF", nil },
+    { "<leader>fF", nil },
     { "<leader>fg", nil },
     { "<leader>fR", nil },
     { "<leader>sw", nil },
@@ -120,73 +190,116 @@ return {
     { "<leader>sM", nil },
     { "<leader>sm", nil },
     { "<leader>sb", nil },
-    -- -- bug: this does some weird things
-    -- {
-    --   "<leader>U",
-    --   function()
-    --     Snacks.picker.undo()
-    --   end,
-    --   desc = "Commands",
-    -- },
+    { "<leader>sj", nil },
+    { "<leader>sR", nil },
+    { "<leader>fo", function() Snacks.picker.recent() end, desc = "Old Files", },
+    { "<leader>fO", function() Snacks.picker.smart() end, desc = "Recent Files (smart)", },
+    { "<leader>fp", function() Snacks.picker.files({ cwd = require("lazy.core.config").options.root, title = "Plugin Files" }) end, desc = "Plugin Files", },
+    { "<leader>fP", function() Snacks.picker.lazy({ title = "Search for Plugin Spec" }) end, desc = "Search for Plugin Spec", },
+    { "<leader>sp", function() Snacks.picker.pickers() end, desc = "Pickers", },
+    { "<leader>fH", function() Snacks.picker.highlights() end, desc = "Highlights", },
+    { "<leader>cl", function() Snacks.picker.lsp_config() end, desc = "Lsp Info", },
+    { "<leader>sr", function() Snacks.picker.resume() end, desc = "Resume", },
+    { "<leader>;", function() Snacks.picker.commands({ layout = "vscode", title = "Builtin Commands" }) end, desc = "Commands", },
+    { "<S-Tab>", "<C-w><C-p>", }, -- this fixes <tab> in preview window
+    -- stylua: ignore end
     {
-      "<leader>fo",
+      "<leader>F",
       function()
-        Snacks.picker.recent()
+        if vim.fn.executable("zoxide") ~= 1 then
+          return vim.notify("Zoxide is not installed", vim.log.levels.WARN)
+        end
+        Snacks.picker.zoxide({
+          title = "Projects",
+          -- load session at directory
+          confirm = function(picker, item)
+            picker:close()
+            vim.fn.chdir(item._path)
+            local session = Snacks.dashboard.sections.session()
+            if session then
+              vim.cmd(session.action:sub(2))
+              vim.notify("Loading Session at: " .. vim.fn.fnamemodify(item._path, ":~"), "info")
+            end
+          end,
+        })
       end,
-      desc = "Recent (dumb)",
+      desc = "Projects",
     },
     {
-      "<leader><leader>",
+      "<leader>j",
       function()
-        Snacks.picker.smart()
+        if vim.fn.executable("zoxide") ~= 1 then
+          return vim.notify("Zoxide is not installed", vim.log.levels.WARN)
+        end
+        Snacks.picker.zoxide({
+          title = "Jump picker to...",
+          confirm = function(picker, item)
+            Snacks.picker.files({
+              cwd = item._path,
+              title = vim.fn.fnamemodify(item._path, ":~"),
+              hidden = true,
+            })
+            picker:close()
+          end,
+        })
       end,
-      desc = "Recent (smart)",
+      desc = "Jump with Zoxide",
+    },
+    {
+      "<leader>sH",
+      function()
+        Snacks.picker.grep({
+          title = "Help Grep",
+          glob = { "**/doc/*.txt" },
+          rtp = true,
+          previewers = { file = { ft = "help" } },
+        })
+      end,
+      desc = "Help Grep",
     },
     {
       "<leader>fw",
       function()
         ---@diagnostic disable-next-line: missing-fields
-        Snacks.picker.grep({ cwd = get_dir_with_fallback() })
+        local dir = require("custom.utils").get_dir_with_fallback()
+        Snacks.picker.grep({ cwd = dir, title = "Files in " .. vim.fn.fnamemodify(dir, ":~") })
       end,
-      desc = "Grep (cwd)",
-    },
-    {
-      "<leader>ff",
-      function()
-        ---@diagnostic disable-next-line: missing-fields
-        Snacks.picker.files({ cwd = get_dir_with_fallback() })
-      end,
-      desc = "Find Files (cwd)",
+      desc = "Grep (buffer dir)",
     },
     {
       "<leader>fh",
       function()
+        local dir = require("custom.utils").get_dir_with_fallback()
         ---@diagnostic disable-next-line: missing-fields
-        Snacks.picker.files({ cwd = LazyVim.root.get({ normalize = true, hidden = true, ignored = true }) })
+        Snacks.picker.files({
+          cwd = require("custom.utils").get_dir_with_fallback(),
+          title = "Files in " .. vim.fn.fnamemodify(dir, ":~"),
+        })
       end,
-      desc = "Files Here (root)",
+      desc = "Here (buffer dir)",
     },
     {
-      "<leader>fp",
+      "<leader>st",
       function()
-        ---@diagnostic disable-next-line: missing-fields
-        Snacks.picker.files({ cwd = require("lazy.core.config").options.root })
+        ---@diagnostic disable-next-line: undefined-field
+        Snacks.picker.todo_comments({
+          cwd = require("custom.utils").get_dir_with_fallback(),
+        })
       end,
-      desc = "Find Plugin File",
+      desc = "Todo",
     },
     {
-      "<leader>;",
+      "<leader>sT",
       function()
-        Snacks.picker.commands()
+        local dir = require("custom.utils").get_dir_with_fallback()
+        ---@diagnostic disable-next-line: undefined-field
+        Snacks.picker.todo_comments({
+          title = "Todo Comments in " .. vim.fn.fnamemodify(dir, ":~"),
+          keywords = { "TODO", "FIX", "FIXME" },
+          cwd = dir,
+        })
       end,
-      desc = "Commands",
-    },
-    {
-      "<leader>j",
-      function()
-        Snacks.picker.zoxide()
-      end,
-      desc = "Jump to Project",
+      desc = "Todo/Fix/Fixme",
     },
   },
 }

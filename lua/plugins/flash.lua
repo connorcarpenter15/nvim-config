@@ -4,21 +4,25 @@ return {
   event = "VeryLazy",
   opts = {
     search = {
+      mode = "fuzzy",
       multi_window = false,
     },
+    label = { uppercase = false },
     jump = {
       nohlsearch = true, -- clear highlight after jump
-      autojump = true, -- automatically jump when there is only one match
+      autojump = false, -- automatically jump when there is only one match
     },
-    label = {
-      uppercase = false,
+    highlight = {
+      backdrop = false, -- do not dim the background
     },
     modes = {
-      char = { -- `f`, `F`, `t`, `T`, `;` and `,` motions
-        enabled = false,
-      },
-      search = {
-        enabled = false,
+      -- `f`, `F`, `t`, `T`, `;` and `,` motions
+      char = { enabled = false },
+      search = { enabled = false },
+    },
+    prompt = {
+      win_config = {
+        border = "none",
       },
     },
   },

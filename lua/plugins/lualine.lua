@@ -1,101 +1,137 @@
 vim.g.trouble_lualine = false
+
 return {
   "nvim-lualine/lualine.nvim",
-  -- event = { "BufReadPre", "BufNewFile" },
-  init = function()
-    vim.g.lualine_laststatus = vim.o.laststatus
-    if vim.fn.argc(-1) > 0 then
-      -- set an empty statusline till lualine loads
-      vim.o.statusline = " "
-    else
-      -- hide the statusline on the starter page
-      vim.o.laststatus = 0
-    end
-  end,
+  event = "LazyFile",
+  dependencies = { "echasnovski/mini.icons" },
   opts = function()
+    local icons = LazyVim.config.icons
     local opts = {
       options = {
-        theme = require("custom.lualine_theme").theme,
-        disabled_filetypes = { statusline = { "snacks_dashboard" } },
-        component_separators = { left = "", right = "" },
+        padding = 0,
+        theme = "minimal",
+        always_divide_middle = true,
         section_separators = { left = "", right = "" },
+        component_separators = { left = "", right = "" },
+        disabled_filetypes = { statusline = { "snacks_dashboard" } },
       },
       sections = {
-        lualine_a = { {} },
-        ---@diagnostic disable-next-line: assign-type-mismatch
-        lualine_b = { LazyVim.lualine.root_dir({ cwd = true }) },
+        lualine_a = {},
+        lualine_b = {
+          -- stylua: ignore start
+          { function() return " " end, },
+          ---@diagnostic disable-next-line: assign-type-mismatch
+          LazyVim.lualine.root_dir({ cwd = true }),
+          { function() return " " end, },
+          -- stylua: ignore stop
+          {
+            "branch",
+            padding = { left = 1, right = 1 },
+            draw_empty = false,
+            icon = { "" },
+          },
+        },
         lualine_c = {
+          {
+            "filetype",
+            icon_only = true,
+            padding = { left = 1, right = 0 },
+          },
+          -- stylua: ignore
+          { function() return " " end, cond = function () return vim.bo.filetype == '' end }, -- artificial padding
+          {
+            LazyVim.lualine.pretty_path(),
+          },
+          -- stylua: ignore
+          {
+            function() return "  " .. require("dap").status() end,
+            cond = function() return package.loaded["dap"] and require("dap").status() ~= "" end,
+            color = function() return { fg = Snacks.util.color("Debug") } end,
+          },
           {
             "diagnostics",
             symbols = {
-              error = LazyVim.config.icons.diagnostics.Error,
-              warn = LazyVim.config.icons.diagnostics.Warn,
-              info = LazyVim.config.icons.diagnostics.Info,
-              hint = LazyVim.config.icons.diagnostics.Hint,
+              error = icons.diagnostics.Error,
+              warn = icons.diagnostics.Warn,
+              info = icons.diagnostics.Info,
+              hint = icons.diagnostics.Hint,
             },
-            padding = { left = 1, right = 1 },
+            padding = { left = 1 },
           },
+          -- {
+          --   require("lualine_require").require("lazy.status").updates,
+          --   cond = require("lualine_require").require("lazy.status").has_updates,
+          --   color = "Special",
+          --   padding = { left = 1 },
+          -- },
+          -- stylua: ignore
           {
-            require("lualine_require").require("lazy.status").updates,
-            cond = require("lualine_require").require("lazy.status").has_updates,
-            color = function()
-              return { fg = Snacks.util.color("Special") }
-            end,
-          },
-          {
-            function()
-              local reg = vim.fn.reg_recording()
-              if reg == "" then
-                return ""
-              end -- not recording
-              return "recording @" .. reg
-            end,
+            -- this is for showing when a macro is recording
+            function() return require("lualine_require").require("noice").api.status.mode.get() end,
+            cond = function() return package.loaded["noice"] and require("lualine_require").require("noice").api.status.mode.has() end,
             color = "WarningMsg",
+            padding = { left = 1 },
           },
         },
-        lualine_x = {
-          {
-            -- see custom/tabline.lua
-            require("custom.tabline").tabline,
-            padding = { left = 4, right = 1 },
-          },
-        },
+        ------- RIGHT SIDE of statusline -----
+        lualine_x = {},
         lualine_y = {
           {
-            "progress",
+            "location",
+            cond = function()
+              return not string.find(vim.fn.mode():lower(), "[v]")
+            end,
+            padding = 1,
+          },
+          {
+            "selectioncount",
+            padding = 1,
+            fmt = function(str)
+              if str == "" then
+                return
+              end
+              local total_width = 6
+              local str_len = #str
+              if str_len < total_width and str_len ~= "" then
+                local padding = total_width - str_len
+                local right_pad = math.floor(padding / 2)
+                local left_pad = padding - right_pad
+                return string.rep(" ", left_pad) .. str .. string.rep(" ", right_pad)
+              else
+                return str
+              end
+            end,
+          },
+          { "progress", padding = 1 },
+          {
+            function()
+              return ""
+            end,
+            cond = function()
+              return LazyVim.is_win()
+            end,
+            padding = { left = 1, right = 0 },
+            color = nil,
+          },
+          {
+            "hostname",
+            padding = 1,
+            color = nil,
           },
         },
-        lualine_z = {},
+        lualine_z = {
+          {
+            function()
+              return ""
+            end,
+            padding = 1,
+            color = {
+              fg = Snacks.util.color("DiffAdded"),
+            },
+          },
+        },
       },
     }
     return opts
   end,
-  keys = {
-    {
-      "<A-,>",
-      function()
-        local current_tab = vim.fn.tabpagenr()
-        if current_tab == 1 then
-          vim.cmd("tabmove")
-        else
-          vim.cmd("-tabmove")
-        end
-        require("lualine").refresh()
-      end,
-      desc = "Move Tab Left",
-    },
-    {
-      "<A-;>",
-      function()
-        local current_tab = vim.fn.tabpagenr()
-        if current_tab == vim.fn.tabpagenr("$") then
-          vim.cmd("0tabmove")
-        else
-          vim.cmd("+tabmove")
-        end
-        require("lualine").refresh()
-      end,
-      desc = "Move Tab Right",
-    },
-  },
 }
