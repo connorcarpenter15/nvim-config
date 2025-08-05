@@ -8,7 +8,7 @@ return {
     mode = "term",
     startinsert = true,
     filetype = {
-      typescript = "cd $dir && node --loader ts-node/esm $fileName",
+      typescript = "cd $dir && node --no-warnings --loader ts-node/esm $fileName",
       python = "python3 -u",
       cpp = {
         "cd $dir &&",
@@ -20,7 +20,7 @@ return {
     },
     term = {
       position = "vert", -- horiz, top, vert
-      size = 93,
+      size = 113,
     },
     float = {
       border = "rounded",

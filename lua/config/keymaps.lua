@@ -155,33 +155,6 @@ end)
 vim.keymap.set("n", "<ScrollWheelUp>", "<C-y>")
 vim.keymap.set("n", "<ScrollWheelDown>", "<C-e>")
 
--- ------------------------------------- CMU SHARK --------------------------------------------
-
-vim.keymap.set("n", "<leader>sc", function()
-  local filename = vim.fn.expand("%")
-  local remote_host = "ccarpent@sandshark.ics.cs.cmu.edu"
-
-  -- Extract the directory name from the local path
-  local local_dir = vim.fn.fnamemodify(filename, ":h")
-  -- local dir_name = vim.fn.fnamemodify(local_dir, ":t")
-  local dir_name = "malloclab"
-  local base_name = vim.fn.fnamemodify(filename, ":t")
-
-  -- Construct the remote path
-  local remote_path = "~/private/" .. dir_name .. "/" .. base_name
-
-  local password = vim.env.CMU_REMOTE_PASSWORD
-
-  if password then
-    local command = "sshpass -p '" .. password .. "' rsync " .. filename .. " " .. remote_host .. ":" .. remote_path
-    require("snacks").terminal.open(command)
-  else
-    vim.notify("Unable to sync to remote: password unknown")
-  end
-
-  vim.notify("File synced to CMU Shark")
-end, { desc = "CMU Shark Copy", silent = true })
-
 ---------------------------
 -----== NORMAL MODE ==-----
 ---------------------------
@@ -364,9 +337,9 @@ vim.keymap.set({ "n", "v" }, "D", '"_D', { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "d", '"_d', { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "C", '"_C', { noremap = true, silent = true })
 vim.keymap.set({ "n", "v" }, "c", '"_c', { noremap = true, silent = true })
-vim.keymap.set({ "n", "v" }, "x", '"_x', { noremap = true, silent = true })
+vim.keymap.set({ "n", "v" }, "X", '"_x', { noremap = true, silent = true })
 vim.keymap.set("v", "p", '"_dp', { noremap = true, silent = true })
-vim.keymap.set("n", "X", "0D", { remap = true, desc = "Clear line", silent = true })
+-- vim.keymap.set("n", "X", "0D", { remap = true, desc = "Clear line", silent = true })
 
 -- paste from system clipboard
 vim.keymap.set("i", "<C-v>", "<C-r>+", { noremap = true, silent = true })
@@ -429,7 +402,7 @@ vim.keymap.set({ "i", "n" }, "", "<Nop>") -- prev
 vim.keymap.set({ "i", "n" }, "", "<Nop>") -- skip
 
 -- note: these will work in every filetype
-local abbrevations = {
+abbrevations = {
   { "dont", "don't" },
   { "shouldnt", "shouldn't" },
   { "cant", "can't" },
