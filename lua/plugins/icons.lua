@@ -11,7 +11,7 @@ return {
     },
   },
   {
-    "echasnovski/mini.icons",
+    "nvim-mini/mini.icons",
     lazy = true,
     opts = {
       -- Override default glyph for "file" category (reuse highlight group)
