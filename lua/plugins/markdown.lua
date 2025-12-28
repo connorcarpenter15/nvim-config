@@ -1,102 +1,101 @@
-local M = {
+-- see after/ftplugin/markdown.lua
+return {
+  {
+    "yousefhadder/markdown-plus.nvim",
+    ft = { "markdown", "text" },
+    opts = {
+      features = { table = false },
+      keymaps = { enabled = false },
+    }, -- don't initialize default keymaps
+    keys = {
+      { "o", "<Plug>(MarkdownPlusNewListItemBelow)", buffer = true, ft = "markdown", mode = "n" },
+      { "O", "<Plug>(MarkdownPlusNewListItemAbove)", buffer = true, ft = "markdown", mode = "n" },
+      { "<CR>", "<Plug>(MarkdownPlusListEnter)", buffer = true, ft = "markdown", mode = "i" },
+      { "<BS>", "<Plug>(MarkdownPlusListBackspace)", buffer = true, ft = "markdown", mode = "i" },
+      { "<C-c>", "<Plug>(MarkdownPlusToggleCheckbox)", buffer = true, ft = "markdown" },
+      { "<C-i>", "<Plug>(MarkdownPlusItalic)", buffer = true, ft = "markdown", mode = { "v" } },
+      { "<C-b>", "<Plug>(MarkdownPlusBold)", buffer = true, ft = "markdown", mode = { "n", "v" } },
+    },
+  },
   {
     "MeanderingProgrammer/render-markdown.nvim",
-    ---@module 'render-markdown'
-    ---@type render.md.UserConfig
     ft = { "markdown", "norg", "rmd", "org", "codecompanion" },
     opts = {
       render_modes = { "n", "c", "i", "\x16", "t", "no", "V", "nov", "noV", "vs", "v" },
       on = {
-        render = function()
-          vim.wo.conceallevel = 3
-        end,
-        clear = function()
-          vim.wo.conceallevel = 0
-        end,
+        -- stylua: ignore start
+        render = function() vim.wo.conceallevel = 3 end,
+        clear = function() vim.wo.conceallevel = 0 end,
+        -- stylua: ignore end
       },
       file_types = { "markdown", "norg", "rmd", "org", "codecompanion" },
-      latex = { enabled = false },
+      latex = { enabled = true },
       code = {
-        sign = true,
         width = "block",
-        position = "left",
-        style = "full",
-        language_icon = false,
-        language_name = false,
-        right_pad = 2,
-        highlight_inline = "DiagnosticOk",
+        position = "right",
         border = "thick",
+        sign = false,
+        right_pad = 1,
+        left_pad = 1,
       },
       heading = {
         setext = false,
         sign = false,
-        position = "inline",
-        border = false,
+        width = "block",
         left_pad = 1,
         right_pad = 1,
-        width = "block",
-        border_virtual = true,
         icons = {},
       },
       checkbox = {
         checked = { icon = "󰄲" },
         unchecked = { icon = "󰄱" },
       },
-      indent = { enabled = false },
+      pipe_table = {
+        border_virtual = true,
+      },
     },
     config = function(_, opts)
       require("render-markdown").setup(opts)
       Snacks.toggle({
         name = "Render Markdown",
-        get = function()
-          return require("render-markdown.state").enabled
-        end,
-        set = function(enabled)
-          local m = require("render-markdown")
-          if enabled then
-            m.enable()
-          else
-            m.disable()
-          end
-        end,
+        get = require("render-markdown").get,
+        set = require("render-markdown").set,
       }):map("<leader>um")
     end,
-    keys = {
-      {
-        "<leader>um",
-        function()
-          require("render-markdown").toggle()
-        end,
-        desc = "Toggle Markdown Preview",
-      },
-    },
   },
   {
-    -- preview markdown
+    -- preview markdown (full config only)
     "fmorroni/peek.nvim",
-    -- branch = "my-main",
-    cond = vim.fn.executable("deno") == 1,
+    branch = "my-main",
+    cond = vim.g.full_config,
     ft = "markdown",
     build = "deno task --quiet build:fast",
+    dependencies = {
+      {
+        "mason-org/mason.nvim",
+        ensure_installed = {
+          "deno",
+        },
+      },
+    },
     opts = function()
       vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
       vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
-
       local opts = {
         app = "webview",
         theme = "dark",
         close_on_bdelete = false,
       }
-
       if vim.fn.has("wsl") == 1 then
-        opts.app = { "/mnt/c/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe", "--new-window" }
+        opts.app = { "/mnt/c/Users/nicol/AppData/Local/imput/Helium/Application/chrome.exe", "--new-window" }
+      else
+        opts.app = { "chrome", "--new-window" }
       end
-
       return opts
     end,
     keys = {
       {
-        "<leader>o",
+        "<leader>cp",
         function()
           require("peek").open()
         end,
@@ -107,73 +106,3 @@ local M = {
     },
   },
 }
-
--- enable marksman lsp/markdown-toc formatter in full config
-if
-  vim.g.full_config
-  and (
-    vim.fn.filereadable(vim.fn.expand("~/.cbfmt.toml")) == 0
-    or vim.fn.getftype(vim.fn.expand("~/.cbfmt.toml")) == "link"
-  )
-then
-  -- cbfmt requires a config file
-  --   vim.api.nvim_echo({
-  --     {
-  --       "Please create a ~/.cbfmt.toml file for markdown codeblock formatting.",
-  --       "WarningMsg",
-  --     },
-  --   }, true, {})
-  -- end
-  table.insert(M, {
-    {
-      "nvim-treesitter/nvim-treesitter",
-      -- likes to not work on windows
-      ensure_installed = { "latex" }, -- proper math block colors
-    },
-    {
-      "neovim/nvim-lspconfig",
-      opts = {
-        servers = {
-          marksman = {},
-        },
-      },
-    },
-    {
-      "mason-org/mason.nvim",
-      opts = { ensure_installed = { "markdownlint-cli2", "marksman" } },
-    },
-    {
-      "stevearc/conform.nvim",
-      opts = {
-        formatters_by_ft = {
-          ["markdown"] = { "markdownlint-cli2", "cbfmt" },
-        },
-        formatters = {
-          ["markdownlint-cli2"] = {
-            condition = function(_, ctx)
-              local diag = vim.tbl_filter(function(d)
-                return d.source == "markdownlint"
-              end, vim.diagnostic.get(ctx.buf))
-              return #diag > 0
-            end,
-          },
-        },
-      },
-    },
-    {
-      "mfussenegger/nvim-lint",
-      opts = {
-        linters_by_ft = {
-          markdown = { "markdownlint-cli2" },
-        },
-        linters = {
-          ["markdownlint-cli2"] = {
-            -- explicitly provide config file (in dotfiles repo)
-            args = { "--config", vim.fn.expand("~/.markdownlint.yaml") },
-          },
-        },
-      },
-    },
-  })
-end
-return M

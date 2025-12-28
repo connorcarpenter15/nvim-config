@@ -33,10 +33,6 @@ return {
       notification = { winblend = 100 },
       border = "rounded",
     },
-    lazygit = {
-      enabled = true,
-      configure = true,
-    },
   },
   keys = {
     { "<leader>dpp", nil },

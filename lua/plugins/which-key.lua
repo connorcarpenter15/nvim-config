@@ -48,8 +48,6 @@ return {
     { "<leader>|", nil },
     { "<leader>bb", nil },
     { "<leader>bD", nil },
-    { "<leader>ft", nil },
-    { "<leader>fT", nil },
     { "<leader>qq", nil },
   },
 }

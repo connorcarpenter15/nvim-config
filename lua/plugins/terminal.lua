@@ -33,5 +33,16 @@ return {
       desc = "Toggle floating terminal",
       mode = { "n", "t" },
     },
+    {
+      "<leader>ft",
+      function()
+        require("snacks.terminal").toggle(nil, {
+          win = { position = "float", border = "rounded" },
+          env = { SNACKS_TERM_ID = "floating_terminal" },
+        })
+      end,
+      desc = "Toggle floating terminal",
+      mode = { "n", "t" },
+    },
   },
 }
