@@ -54,3 +54,7 @@ PersonaLeak
 Hulu
 PersonaRisk
 LLM
+config
+macOS
+LazyVim
+nvim
